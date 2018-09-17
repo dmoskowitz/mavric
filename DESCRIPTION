@@ -1,0 +1,22 @@
+Package: mavric
+Title: Measuring Association between Variance and Covariates
+Version: 0.0.0.9003
+Authors@R: person("David", "Moskowitz", email = "dmosk@stanford.edu", role =
+    c("aut", "cre"))
+Description: Provides estimates of the percentage of variance in
+    data due to each of the user-supplied covariates. It additionally offers
+    information regarding the confounding between those covariates. The
+    underlying methodology is built upon PCA, from which MAVRIC also extracts
+    those measured elements from the data that are statistically different
+    between pairs of categories within covariates.
+Depends: R (>= 3.2)
+Imports: cluster, DESeq2, doParallel, FactoMineR, foreach,
+        SummarizedExperiment, glmnet, gtools, msir, scatterplot3d,
+        stats, venneuler, vsn, plot3D
+License: AGPL-3
+LazyData: true
+RoxygenNote: 5.0.1
+NeedsCompilation: no
+Packaged: 2016-11-29 21:59:13 UTC; david
+Author: David Moskowitz [aut, cre]
+Maintainer: David Moskowitz <dmosk@stanford.edu>
