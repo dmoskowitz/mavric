@@ -2,12 +2,11 @@ sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = 'pear
     if(verbose) message("Finding significantly correlated measurements")
     relpcs <- sort(as.numeric(unique(unlist(lapply(results$pcs, rownames)))))
     relpcs.rle <- rle(sort(as.numeric(unlist(lapply(results$pcs, rownames)))))
-    rl <- lapply(vector("list", ncol(annotation)), function(e) character(0))
-    names(rl) <- colnames(annotation)
+    rl <- lapply(vector("list", length(unique(unlist(lapply(contrastlist, function(e) return(e[1])))))), function(e) character(0))
+    names(rl) <- colnames(annotation)[colnames(annotation) %in% unlist(lapply(contrastlist, function(e) return(e[1])))]
     if(length(relpcs) == 0) return(rl)
-    for(e in 1:ncol(annotation)) {
-        curcons <- which(lapply(contrastlist, function(e) e[1]) == colnames(annotation)[, e])
-        if(length(curcons) == 0) next
+    rlcount <- 1
+    for(e in which(colnames(annotation) %in% unique(unlist(lapply(contrastlist, function(e) return(e[1])))))) {
         if(class(annotation[,e]) != "factor") {
             rv <- list("high-low" = character(0))
             if(nrow(results$pcs[[e]]) > 0) {
@@ -25,12 +24,13 @@ sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = 'pear
                 rownames(cor.vals) <- colnames(results$pcaobj$call$X)
                 rv[[1]] <- cor.vals
             }
-            rl[[e]] <- rv
+            rl[[rlcount]] <- rv
         } else {
             grp.pairs <- gtools::combinations(length(levels(annotation[,e])), 2)
             contrasts <- apply(grp.pairs, 1, function(i) paste(levels(annotation[,e])[i[1]], levels(annotation[,e])[i[2]], sep='-'))
-            inccons <- lapply(strsplit(contrasts, "-"), function(e) any(lapply(contrastlist[curcons], function(clcc) return(any(clcc == e, clcc = rev(e))))))
-            grp.pairs <- grp.pairs[inccons, ]
+            curcons <- which(unlist(lapply(contrastlist, function(e) e[1])) == colnames(annotation)[e])
+            inccons <- unlist(lapply(strsplit(contrasts, "-"), function(e) any(unlist(lapply(contrastlist[curcons], function(clcc) return(any(all(unlist(clcc)[-1] == e), all(unlist(clcc)[-1] == rev(e)))))))))
+            grp.pairs <- grp.pairs[inccons, , drop = F]
             contrasts <- contrasts[inccons]
             rv <- lapply(vector("list", length(contrasts)), function(e) character(0))
             names(rv) <- contrasts
@@ -59,8 +59,9 @@ sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = 'pear
                     rv[[p]] <- cor.vals
                 }
             }
-            rl[[e]] <- rv
+            rl[[rlcount]] <- rv
         }
+        rlcount <- rlcount + 1
     }
     return(rl)
 }

@@ -77,7 +77,7 @@ estVC <- function(data, annotation, contrastlist, ntop = Inf, sigcor = TRUE, alp
     names(rv$pcs) <- colnames(annotation)
     if(sigcor) {
         rv$cor <- sigMeasuresProj(rv, annotation, contrastlist, corMethod, verbose = verbose, uniqueonly = uniqueonly, wilcox = wilcox)
-        names(rv$cor) <- colnames(annotation)
+        names(rv$cor) <- colnames(annotation)[colnames(annotation) %in% unlist(lapply(contrastlist, function(e) return(e[1])))]
     }
     return(rv)
 }
