@@ -7,7 +7,8 @@
 estVC(data, annotation, contrastlist, ntop = Inf, sigcor = TRUE,
   alpha = 0.01, effsize = 0.05, discthresh = 1/3, ncores = 1,
   verbose = TRUE, prenorm = FALSE, autosel = FALSE,
-  corMethod = "pearson", pcaobj = NULL, uniqueonly = FALSE,
+  corMethod = c("pearson", "kendall", "spearman"), resampling = c("none",
+  "permutation", "bootstrap"), pcaobj = NULL, uniqueonly = FALSE,
   scaleVar = TRUE, minVar = 1, wilcox = FALSE)
 }
 \arguments{
@@ -36,6 +37,8 @@ estVC(data, annotation, contrastlist, ntop = Inf, sigcor = TRUE,
 \item{autosel}{Whether to automatically determine which peaks are high-variance, ignoring `ntop.' See Details.}
 
 \item{corMethod}{Which correlation method to use for identifying significantly correlated measurements. See `method' argument to \code{cor}.}
+
+\item{resampling}{Whether to use either permutation or bootstrap testing in lieu of the default asymptotic t approximation in the correlation-based statistical testing of the differential analysis.}
 
 \item{pcaobj}{If mavric has previously been run, the `pcaobj' field of the returned object can be passed here to avoid recomputing it.}
 

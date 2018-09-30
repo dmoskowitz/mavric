@@ -1,5 +1,7 @@
-sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = 'pearson', adjustMethod = 'BH', verbose = T, useall = T, uniqueonly = F, wilcox = F) {
+sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = c('pearson', 'kendall', 'spearman'), resampling = c('none', 'permutation', 'bootstrap'), adjustMethod = 'BH', verbose = T, useall = T, uniqueonly = F, wilcox = F) {
     if(verbose) message("Finding significantly correlated measurements")
+    corMethod <- match.arg(corMethod)
+    resampling <- match.arg(resampling)
     relpcs <- sort(as.numeric(unique(unlist(lapply(results$pcs, rownames)))))
     relpcs.rle <- rle(sort(as.numeric(unlist(lapply(results$pcs, rownames)))))
     rl <- lapply(vector("list", length(unique(unlist(lapply(contrastlist, function(e) return(e[1])))))), function(e) character(0))
@@ -18,7 +20,7 @@ sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = 'pear
                 neg1.pt <- glmnet.coefs * c(1, rep(-1, ncol(results$pcasp)))
                 proj.pts <- t(apply(subsp.vals, 1, function(v) projectPoint(glmnet.coefs, neg1.pt, v)))[, cpcs, drop = F]
                 proj.vals <- ifelse(as.matrix(dist(rbind(subsp.vals[which.max(subsp.vals[,1]), cpcs], proj.pts)))[-1, 1] < as.matrix(dist(rbind(subsp.vals[which.min(subsp.vals[,1]), cpcs], proj.pts)))[-1, 1], 1, -1) * as.matrix(dist(rbind(zero.pt, proj.pts)))[-1, 1]
-                cor.vals <- t(apply(results$pcaobj$call$X, 2, function(j) { cv <- cor.test(proj.vals, j, method = corMethod); return(c(cv$estimate, cv$p.value)) }))
+                cor.vals <- foreach(j=1:ncol(results$pcaobj$call$X), .combine = rbind, .packages = c('stats'), .export = 'mcor.test') %dopar% mcor.test(proj.vals, results$pcaobj$call$X[,j], method = corMethod, resampling = resampling, wilcox = wilcox)
                 cor.vals <- cbind(cor.vals, p.adjust(cor.vals[,2], method = adjustMethod))
                 colnames(cor.vals) <- c(corMethod, "p", adjustMethod)
                 rownames(cor.vals) <- colnames(results$pcaobj$call$X)
@@ -52,7 +54,11 @@ sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = 'pear
                         cx <- cx[as.integer(annotation[,e]) %in% grp.pairs[p,], , drop = F]
                     }
                     proj.vals <- ifelse(as.matrix(dist(rbind(vs[1, cpcs], proj.pts)))[-1, 1] < as.matrix(dist(rbind(vs[2, cpcs], proj.pts)))[-1, 1], 1, -1) * as.matrix(dist(rbind(zero.pt, proj.pts)))[-1, 1]
-                    cor.vals <- t(apply(cx, 2, function(j) { if(wilcox) { cv <- wilcox.test(j[as.integer(annotation[,e]) %in% grp.pairs[p,1]], j[as.integer(annotation[,e]) %in% grp.pairs[p,2]], conf.int = T) } else { cv <- cor.test(proj.vals, j, method = corMethod) }; return(c(cv$estimate, cv$p.value)) }))
+                    if(wilcox) {
+                        cor.vals <- t(apply(cx, 2, function(j) { cv <- wilcox.test(j[as.integer(annotation[,e]) %in% grp.pairs[p,1]], j[as.integer(annotation[,e]) %in% grp.pairs[p,2]], conf.int = T); return(c(cv$estimate, cv$p.value)) }))
+                    } else {
+                        cor.vals <- foreach(j=1:ncol(results$pcaobj$call$X), .combine = rbind, .packages = c('stats'), .export = 'mcor.test') %dopar% mcor.test(proj.vals, results$pcaobj$call$X[,j], method = corMethod, resampling = resampling)
+                    }
                     cor.vals <- cbind(cor.vals, p.adjust(cor.vals[,2], method = adjustMethod))
                     colnames(cor.vals) <- c(corMethod, "p", adjustMethod)
                     rownames(cor.vals) <- colnames(results$pcaobj$call$X)
@@ -64,6 +70,17 @@ sigMeasuresProj <- function(results, annotation, contrastlist, corMethod = 'pear
         rlcount <- rlcount + 1
     }
     return(rl)
+}
+
+mcor.test <- function(x, y, method, resampling) {
+    rv <- cor.test(x, y, method = method)
+    if(resampling == "bootstrap") {
+        rv$p.value <- 1-ecdf(abs(na.omit(replicate(10000, suppressWarnings(cor(sample(x, replace = T), sample(y, replace = T), method = method))))))(abs(rv$estimate))
+    } else if(resampling == "permutation") {
+        rv$p.value <- 1-ecdf(abs(replicate(10000, cor(sample(x), sample(y), method = method))))(abs(rv$estimate))
+    }
+    rv <- c(rv$estimate, rv$p.value)
+    return(rv)
 }
 
 # deprecated
