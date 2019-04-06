@@ -78,14 +78,19 @@ Given the subspace, the algorithm then forms an axis of variance between pairs, 
 When `autosel' is true, mavric uses a robust LOESS fit to identify measurements with more variance than expected (based on a 95\% confidence interval), given the measurements' respective means.
 }
 \examples{
-## Human and mouse RNA-seq data from ENCODE, evaluating the amount of
-##  variance in gene expression attributable to species-specific
-##  versus tissue-specific effects, and quantifying the confounding
-##  between species-specific effects and batch effects.
+## Using human and mouse RNA-seq data from ENCODE, evaluating the
+##  amount of variance in gene expression attributable to
+##  species-specific versus tissue-specific effects, and
+##  quantifying the confounding between species-specific effects
+##  and batch effects.
 ##
 \dontrun{
-evc <- estVC(data = rawCounts, annotation = datasets[, -1], ntop = 10000, sigcor = F, effsize = .01, discthresh = Inf, ncores = 4)
+evc <- estVC(data = rawCounts, annotation = datasets[, -1],
+ ntop = 10000, sigcor = F, effsize = .01, discthresh = Inf,
+ ncores = 4) # should complete in ~5 minutes
+## Plot variance and confounding amongst experimental covariates
 plotVars(evc, datasets[, -1])
+## Plot subset of PCs best separating samples by species
 plotPCs(evc, datasets[, -1], "species")
 }
 

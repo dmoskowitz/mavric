@@ -44,15 +44,16 @@
 #' cor: A list with a list element for each covariate, with each sublist element a matrix giving the correlation between each measurement and the pairwise axis of variance for a given pair of levels in the covariate.
 #'
 #' @examples
-#' ## Human and mouse RNA-seq data from ENCODE, evaluating the amount of
-#' ##  variance in gene expression attributable to species-specific
-#' ##  versus tissue-specific effects, and quantifying the confounding
-#' ##  between species-specific effects and batch effects.
+#' ## Using human and mouse RNA-seq data from ENCODE, evaluating the
+#' ##  amount of variance in gene expression attributable to
+#' ##  species-specific versus tissue-specific effects, and
+#' ##  quantifying the confounding between species-specific effects
+#' ##  and batch effects.
 #' ##
 #' \dontrun{
 #' evc <- estVC(data = rawCounts, annotation = datasets[, -1],
 #'  ntop = 10000, sigcor = F, effsize = .01, discthresh = Inf,
-#'  ncores = 4)
+#'  ncores = 4) # should complete in ~5 minutes
 #' ## Plot variance and confounding amongst experimental covariates
 #' plotVars(evc, datasets[, -1])
 #' ## Plot subset of PCs best separating samples by species
