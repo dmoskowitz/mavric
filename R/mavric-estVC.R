@@ -50,8 +50,12 @@
 #' ##  between species-specific effects and batch effects.
 #' ##
 #' \dontrun{
-#' evc <- estVC(data = rawCounts, annotation = datasets[, -1], ntop = 10000, sigcor = F, effsize = .01, discthresh = Inf, ncores = 4)
+#' evc <- estVC(data = rawCounts, annotation = datasets[, -1],
+#'  ntop = 10000, sigcor = F, effsize = .01, discthresh = Inf,
+#'  ncores = 4)
+#' ## Plot variance and confounding amongst experimental covariates
 #' plotVars(evc, datasets[, -1])
+#' ## Plot subset of PCs best separating samples by species
 #' plotPCs(evc, datasets[, -1], "species")
 #' }
 #'
