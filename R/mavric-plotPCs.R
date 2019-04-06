@@ -14,7 +14,7 @@
 #' @param transp Whether the legend box should be transparent (versus filled)
 #' @export
 #' @return None
-#' @seealso \code{estVC}, \code{plotVars} for Euler diagram plotting, \code{scatterplot3d} in the \code{scatterplot3d} package, \code{par}, and \code{legend}.
+#' @seealso \code{estVC} for example usage, \code{plotVars} for Euler diagram plotting, \code{scatterplot3d} in the \code{scatterplot3d} package, \code{par}, and \code{legend}.
 plotPCs <- function(results, annotation, feature, pcset = NULL, cex = 1, lpos = 'topleft', transp = TRUE, numberline = T, type = 'p') {
     if(transp) transp <- 0
     else transp <- 1

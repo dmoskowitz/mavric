@@ -1,8 +1,8 @@
 Package: mavric
 Title: Measuring Association between Variance and Covariates
-Version: 0.0.0.9003
+Version: 0.0.0.9004
 Authors@R: person("David", "Moskowitz", email = "dmosk@stanford.edu", role =
-    c("aut", "cre"))
+    "cre")
 Description: Provides estimates of the percentage of variance in
     data due to each of the user-supplied covariates. It additionally offers
     information regarding the confounding between those covariates. The

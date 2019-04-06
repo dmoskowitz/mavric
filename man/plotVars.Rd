@@ -28,6 +28,6 @@ This function uses the percent variance explained by each PC (via the eigenvalue
 Occasionally, the underlying plotting function, \code{venneuler}, has trouble effectively creating the Euler diagram due to complex overlap structures. For this reason, two features have been implemented. First, the method will jitter the underlying values to ensure that no two covariates overlap perfectly. Secondly, the parameter `incvals' controls whether values are added in ascending or descending order. By flipping `incvals,' more attractive outputs are sometimes attainable.
 }
 \seealso{
-\code{estVC}, \code{plotPCs} for plotting individual covariates and their assigned subspaces, and \code{venneuler} in the \code{venneuler} package.
+\code{estVC} for example usage, \code{plotPCs} for plotting individual covariates and their assigned subspaces, and \code{venneuler} in the \code{venneuler} package.
 }
 

@@ -12,7 +12,7 @@
 #' @param incvals Whether to add covariates to the Euler diagram in ascending order of percent variance explained
 #' @export
 #' @return None
-#' @seealso \code{estVC}, \code{plotPCs} for plotting individual covariates and their assigned subspaces, and \code{venneuler} in the \code{venneuler} package.
+#' @seealso \code{estVC} for example usage, \code{plotPCs} for plotting individual covariates and their assigned subspaces, and \code{venneuler} in the \code{venneuler} package.
 plotVars <- function(results, annotation, plotzero = TRUE, incvals = FALSE, plotve = TRUE, maxStress = .1) {
     if(!is.data.frame(annotation)) annotation <- data.frame(annotation)
     results$pcs <- lapply(results$pcs, function(e) e[as.numeric(rownames(e)) > 0, , drop = F])

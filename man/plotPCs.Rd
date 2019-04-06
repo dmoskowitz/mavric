@@ -34,6 +34,6 @@ This function uses the coordinates from the PC-subspace assigned to a particular
 Note, critically, that `feature' refers to the *column number* in `annotation' that is of interest, not to that column's name.
 }
 \seealso{
-\code{estVC}, \code{plotVars} for Euler diagram plotting, \code{scatterplot3d} in the \code{scatterplot3d} package, \code{par}, and \code{legend}.
+\code{estVC} for example usage, \code{plotVars} for Euler diagram plotting, \code{scatterplot3d} in the \code{scatterplot3d} package, \code{par}, and \code{legend}.
 }
 

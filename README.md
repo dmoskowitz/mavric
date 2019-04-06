@@ -8,4 +8,4 @@ MAVRIC can be loaded into R using the `load_all` function in the [devtools](http
 
 ## Usage
 
-The primary user-facing function in the package is `estVC`, which performs all the calculations underlying the algorithm and returns the above-described quantification and differential analysis. Additionally, `plotPCs` and `plotVars` offer visualizations of the results. All three functions have help pages within R describing their parameters and use in greater detail.
+The primary user-facing function in the package is `estVC`, which performs all the calculations underlying the algorithm and returns the above-described quantification and differential analysis. Additionally, `plotPCs` and `plotVars` offer visualizations of the results. All three functions have help pages within R describing their parameters and use in greater detail. The help page for `estVC` includes an example for running all three functions.

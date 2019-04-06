@@ -42,7 +42,21 @@
 #' pcasp: A matrix giving the coordinates of each sample in PC-space.
 #'
 #' cor: A list with a list element for each covariate, with each sublist element a matrix giving the correlation between each measurement and the pairwise axis of variance for a given pair of levels in the covariate.
+#'
+#' @examples
+#' ## Human and mouse RNA-seq data from ENCODE, evaluating the amount of
+#' ##  variance in gene expression attributable to species-specific
+#' ##  versus tissue-specific effects, and quantifying the confounding
+#' ##  between species-specific effects and batch effects.
+#' ##
+#' \dontrun{
+#' evc <- estVC(data = rawCounts, annotation = datasets[, -1], ntop = 10000, sigcor = F, effsize = .01, discthresh = Inf, ncores = 4)
+#' plotVars(evc, datasets[, -1])
+#' plotPCs(evc, datasets[, -1], "species")
+#' }
+#'
 #' @export
+#'
 #' @seealso \code{plotPCs} and \code{plotVars} for plotting functionality; \code{silhouette} in the \code{cluster} package for the silhouette statistic; and \code{rlog} and \code{varianceStabilizingTranformation} in the \code{DESeq2} package, and \code{justvsn} in the \code{vsn} package, for variance-stabilizing transformations.
 estVC <- function(data, annotation, contrastlist, ntop = Inf, sigcor = TRUE, alpha = .01, effsize = .05, discthresh = 1/3, ncores = 1, verbose = TRUE, prenorm = FALSE, autosel = FALSE, corMethod = c('pearson', 'kendall', 'spearman'), resampling = c('none', 'permutation', 'bootstrap'), pcaobj = NULL, uniqueonly = FALSE, scaleVar = TRUE, minVar = 1, wilcox = FALSE) {
     if(!is.data.frame(annotation)) {
